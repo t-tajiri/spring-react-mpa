@@ -1,0 +1,16 @@
+{
+  "name": "dom-server",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "build": "webpack --inline --display-error-details"
+  },
+  "dependencies": {
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "rimraf": "^3.0.2",
+    "webpack": "^4.44.2",
+    "webpack-cli": "^3.3.12",
+    "webpack-merge-and-include-globally": "^2.1.25"
+  }
+}
