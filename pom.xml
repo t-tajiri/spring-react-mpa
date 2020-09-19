@@ -16,6 +16,13 @@
 
 	<properties>
 		<java.version>14</java.version>
+		<version.graal>20.2.0</version.graal>
+		<version.maven.resources>3.2.0</version.maven.resources>
+		<version.maven.frontend>1.6</version.maven.frontend>
+		<version.node>v13.10.1</version.node>
+		<version.yarn>v1.22.5</version.yarn>
+		<directory.frontend>src/main/frontend</directory.frontend>
+		<directory.dom-server>src/main/dom-server</directory.dom-server>
 	</properties>
 
 	<dependencies>
@@ -42,17 +49,17 @@
 		<dependency>
 			<groupId>org.graalvm.sdk</groupId>
 			<artifactId>graal-sdk</artifactId>
-			<version>20.2.0</version>
+			<version>${version.graal}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.graalvm.truffle</groupId>
 			<artifactId>truffle-api</artifactId>
-			<version>20.2.0</version>
+			<version>${version.graal}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.graalvm.js</groupId>
 			<artifactId>js</artifactId>
-			<version>20.2.0</version>
+			<version>${version.graal}</version>
 		</dependency>
 	</dependencies>
 
@@ -82,57 +89,92 @@
 			<plugin>
 				<groupId>com.github.eirslett</groupId>
 				<artifactId>frontend-maven-plugin</artifactId>
-				<version>1.6</version>
+				<version>${version.maven.frontend}</version>
 				<configuration>
-					<workingDirectory>src/main/frontend</workingDirectory>
 					<installDirectory>target</installDirectory>
 				</configuration>
 				<executions>
 					<execution>
-						<id>install node and npm</id>
+						<id>install node and yarn</id>
 						<goals>
-							<goal>install-node-and-npm</goal>
+							<goal>install-node-and-yarn</goal>
 						</goals>
 						<configuration>
-							<nodeVersion>v13.10.1</nodeVersion>
-							<npmVersion>6.13.7</npmVersion>
+							<nodeVersion>${version.node}</nodeVersion>
+							<yarnVersion>${version.yarn}</yarnVersion>
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm install</id>
+						<id>frontend install</id>
 						<goals>
-							<goal>npm</goal>
+							<goal>yarn</goal>
 						</goals>
 						<configuration>
-							<arguments>install</arguments>
+							<workingDirectory>${directory.frontend}</workingDirectory>
 						</configuration>
 					</execution>
 					<execution>
-						<id>npm run build</id>
+						<id>frontend build</id>
 						<goals>
-							<goal>npm</goal>
+							<goal>yarn</goal>
 						</goals>
 						<configuration>
 							<arguments>run build</arguments>
+							<workingDirectory>${directory.frontend}</workingDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>dom-server install</id>
+						<goals>
+							<goal>yarn</goal>
+						</goals>
+						<configuration>
+							<workingDirectory>${directory.dom-server}</workingDirectory>
+						</configuration>
+					</execution>
+					<execution>
+						<id>dom-server build</id>
+						<goals>
+							<goal>yarn</goal>
+						</goals>
+						<configuration>
+							<arguments>run build</arguments>
+							<workingDirectory>${directory.dom-server}</workingDirectory>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
 			<plugin>
 				<artifactId>maven-resources-plugin</artifactId>
-				<version>3.2.0</version>
+				<version>${version.maven.resources}</version>
 				<executions>
 					<execution>
-						<id>copy-resources</id>
+						<id>copy-frontend</id>
 						<phase>generate-resources</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/target/classes/static</outputDirectory>
+							<outputDirectory>${project.basedir}/target/classes/static</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/frontend/build</directory>
+									<filtering>false</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-server</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.basedir}/target/classes/static</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/dom-server/build</directory>
 									<filtering>false</filtering>
 								</resource>
 							</resources>
