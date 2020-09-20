@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "build": "webpack --inline --display-error-details"
+    "build": "webpack --inline --display-error-details --config webpack.config.js",
+    "build:dev": "webpack --inline --display-error-details --config webpack.development.js"
   },
   "dependencies": {
     "react": "^16.13.1",
