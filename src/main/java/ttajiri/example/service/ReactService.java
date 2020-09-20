@@ -10,21 +10,21 @@ import java.io.IOException;
 
 @Service
 public class ReactService {
-    private static final String APP_FILE_NAME = "app.js";
+    private static final String RENDER_FILE_NAME = "render.js";
     private final Context polyglot;
 
     public ReactService() {
-        polyglot = Context.newBuilder("js")
-                          .allowAllAccess(true)
-                          .build();
+        polyglot = Context.create("js");
     }
 
     public Value render() throws IOException {
         var defineServerFunction = getSource("static/server.js");
-        var defineAppFunction= getSource("templates/" + APP_FILE_NAME);
-        polyglot.eval(defineServerFunction);
+        var defineAppFunction    = getSource("static/component/App.js");
+        var defineRenderFunction = getSource("templates/" + RENDER_FILE_NAME);
         polyglot.eval(defineAppFunction);
-        return polyglot.getBindings("js").getMember("app").execute();
+        polyglot.eval(defineServerFunction);
+        polyglot.eval(defineRenderFunction);
+        return polyglot.getBindings("js").getMember("render").execute();
     }
 
     private Source getSource(String path) throws IOException {
